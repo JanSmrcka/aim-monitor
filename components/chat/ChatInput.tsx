@@ -3,11 +3,11 @@
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Send } from "lucide-react";
-import { KeyboardEvent } from "react";
+import { type ChangeEvent, type KeyboardEvent } from "react";
 
 interface ChatInputProps {
   value: string;
-  onChange: (value: string) => void;
+  onChange: (e: ChangeEvent<HTMLTextAreaElement>) => void;
   onSubmit: () => void;
   isLoading: boolean;
 }
@@ -24,7 +24,7 @@ export function ChatInput({ value, onChange, onSubmit, isLoading }: ChatInputPro
     <div className="flex items-end gap-2 border-t p-4">
       <Textarea
         value={value}
-        onChange={(e) => onChange(e.target.value)}
+        onChange={onChange}
         onKeyDown={handleKeyDown}
         placeholder="Describe what you want to monitor..."
         disabled={isLoading}
@@ -33,7 +33,7 @@ export function ChatInput({ value, onChange, onSubmit, isLoading }: ChatInputPro
       />
       <Button
         onClick={onSubmit}
-        disabled={isLoading || !value.trim()}
+        disabled={isLoading || !value?.trim()}
         size="icon"
         className="shrink-0"
       >

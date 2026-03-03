@@ -20,8 +20,13 @@ export function MessageList({ messages, append }: MessageListProps) {
   return (
     <ScrollArea className="flex-1">
       <div data-testid="message-list" className="space-y-4 p-4">
-        {messages.map((msg) => (
-          <MessageBubble key={msg.id} message={msg} append={append} />
+        {messages.map((msg, idx) => (
+          <MessageBubble
+            key={msg.id}
+            message={msg}
+            append={append}
+            isLatest={idx === messages.length - 1}
+          />
         ))}
         <div ref={bottomRef} />
       </div>
