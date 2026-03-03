@@ -62,6 +62,24 @@ describe("OptionChips", () => {
     expect(onSelect).toHaveBeenCalledWith("web, news");
   });
 
+  it("multi-select: marks selected options as pressed", async () => {
+    render(
+      <OptionChips
+        question="Pick sources"
+        options={options}
+        onSelect={vi.fn()}
+        disabled={false}
+        allowMultiple
+      />
+    );
+
+    const web = screen.getByRole("button", { name: /web/i });
+    expect(web).toHaveAttribute("aria-pressed", "false");
+
+    await userEvent.click(web);
+    expect(web).toHaveAttribute("aria-pressed", "true");
+  });
+
   it("shows lock helper while agent busy", () => {
     render(
       <OptionChips

@@ -28,12 +28,12 @@ export function ProgressBar({ task }: { task: MonitoringTask }) {
         <span>{completed}/{segments.length}</span>
       </div>
       <div className="flex gap-1">
-        {segments.map((s) => (
+        {segments.map((s, idx) => (
           <div
             key={s.key}
             className={cn(
               "h-1.5 flex-1 rounded-full transition-colors",
-              isFieldDefined(task, s.key) ? "bg-amber-300" : "bg-zinc-800"
+              idx < completed ? "bg-amber-300" : "bg-zinc-800"
             )}
             title={s.label}
           />

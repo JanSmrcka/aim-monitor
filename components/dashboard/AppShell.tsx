@@ -89,7 +89,7 @@ export function AppShell({ user, children }: AppShellProps) {
           </header>
 
           <main className="min-h-0 flex-1 overflow-hidden px-2 pb-2 pt-2 md:px-3 md:pb-3 md:pt-3">
-            <div className="h-full overflow-hidden rounded-2xl border border-amber-100/10 bg-zinc-950/55 shadow-[0_0_0_1px_rgba(251,191,36,0.06)_inset] backdrop-blur">
+            <div className="h-full bg-zinc-950/55 backdrop-blur">
               {children}
             </div>
           </main>
