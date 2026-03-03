@@ -1,6 +1,7 @@
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { QueryProvider } from "@/lib/query-provider";
+import { ChatProvider } from "@/lib/chat-context";
 import { AppShell } from "@/components/dashboard/AppShell";
 
 export default async function DashboardLayout({
@@ -13,7 +14,9 @@ export default async function DashboardLayout({
 
   return (
     <QueryProvider>
-      <AppShell user={session.user}>{children}</AppShell>
+      <ChatProvider>
+        <AppShell user={session.user}>{children}</AppShell>
+      </ChatProvider>
     </QueryProvider>
   );
 }

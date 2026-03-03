@@ -6,6 +6,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Menu } from "lucide-react";
 import { useTasks } from "@/lib/hooks/use-tasks";
+import { useChatContext } from "@/lib/chat-context";
 import { useState } from "react";
 
 interface AppShellProps {
@@ -20,10 +21,11 @@ interface AppShellProps {
 
 export function AppShell({ user, children }: AppShellProps) {
   const { data: tasks = [], isLoading } = useTasks();
+  const { resetChat } = useChatContext();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const handleNewChat = () => {
-    // TODO: reset chat state
+    resetChat();
   };
 
   const handleSelectTask = (_id: string) => {

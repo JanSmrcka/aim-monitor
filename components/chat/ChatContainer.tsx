@@ -9,19 +9,37 @@ import { deriveMonitoringTask } from "@/lib/monitoring-utils";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { PanelRight } from "lucide-react";
+import { useChatContext } from "@/lib/chat-context";
+import { useEffect, useState } from "react";
 
 export function ChatContainer() {
-  const { messages, input, handleInputChange, handleSubmit, status, append } = useChat({
+  const { messages, sendMessage, setMessages, status } = useChat({
     api: "/api/chat",
     maxSteps: 10,
   });
+  const { registerReset } = useChatContext();
+  const [localInput, setLocalInput] = useState("");
+
+  useEffect(() => {
+    registerReset(() => {
+      setMessages([]);
+      setLocalInput("");
+    });
+  }, [registerReset, setMessages]);
 
   const isLoading = status === "streaming" || status === "submitted";
   const task = deriveMonitoringTask(messages);
 
   const onSubmit = () => {
-    if (!input?.trim()) return;
-    handleSubmit();
+    if (!localInput.trim()) return;
+    const text = localInput;
+    setLocalInput("");
+    sendMessage({ role: "user", content: text });
+  };
+
+  const handleAppend = async (msg: { role: "user"; content: string }) => {
+    sendMessage(msg);
+    return undefined;
   };
 
   const preview = <MonitoringPreview task={task} />;
@@ -30,11 +48,11 @@ export function ChatContainer() {
     <div className="flex h-full">
       {/* Chat area */}
       <div className="flex flex-1 flex-col">
-        <MessageList messages={messages} append={append} />
+        <MessageList messages={messages} append={handleAppend} />
         {isLoading && <ThinkingIndicator />}
         <ChatInput
-          value={input}
-          onChange={handleInputChange}
+          value={localInput}
+          onChange={(e) => setLocalInput(e.target.value)}
           onSubmit={onSubmit}
           isLoading={isLoading}
         />
