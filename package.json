@@ -13,9 +13,13 @@
     "postinstall": "prisma generate"
   },
   "dependencies": {
+    "@ai-sdk/azure": "^3.0.40",
+    "@ai-sdk/react": "^3.0.110",
     "@auth/prisma-adapter": "^2.11.1",
     "@prisma/adapter-pg": "^7.4.2",
     "@prisma/client": "^7.4.2",
+    "@tanstack/react-query": "^5.90.21",
+    "ai": "^6.0.108",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^0.576.0",
@@ -25,7 +29,9 @@
     "radix-ui": "^1.4.3",
     "react": "19.2.3",
     "react-dom": "19.2.3",
-    "tailwind-merge": "^3.5.0"
+    "sonner": "^2.0.7",
+    "tailwind-merge": "^3.5.0",
+    "zod": "^4.3.6"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
