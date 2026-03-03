@@ -129,6 +129,22 @@ pnpm prisma migrate deploy
 
 Do not rely on `db push` in production.
 
+This repo includes `vercel.json` with:
+
+```json
+{ "buildCommand": "pnpm build:vercel" }
+```
+
+So Vercel runs `prisma migrate deploy` before `next build` automatically.
+
+### Production Troubleshooting
+
+- `The table public.Account does not exist` means migrations were not applied to the production DB.
+- Fix: run `pnpm prisma migrate deploy` against production `DATABASE_URL`, then redeploy.
+- If Postgres logs SSL mode warning (`prefer/require/verify-ca aliasing`), prefer explicit:
+  - `sslmode=verify-full` (current strong behavior), or
+  - `uselibpqcompat=true&sslmode=require` (libpq-compatible behavior).
+
 ## Environment Variables
 
 | Variable | Required | Description |
