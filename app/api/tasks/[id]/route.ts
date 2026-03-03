@@ -8,6 +8,14 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return !!value && typeof value === "object";
 }
 
+function isLegacySchemaError(error: unknown): boolean {
+  if (!(error instanceof Error)) return false;
+  return (
+    error.name === "PrismaClientValidationError" &&
+    /Unknown argument `(?:scope|keywords|entities|sources|frequency|filters|summary)`/.test(error.message)
+  );
+}
+
 export async function GET(_req: Request, { params }: { params: Promise<{ id: string }> }) {
   const session = await auth();
   if (!session?.user?.id) {
@@ -66,10 +74,31 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
     return NextResponse.json({ error: "no fields to update" }, { status: 400 });
   }
 
-  const updated = await prisma.monitoringTask.update({
-    where: { id },
-    data,
-  });
+  let updated;
+  try {
+    updated = await prisma.monitoringTask.update({
+      where: { id },
+      data,
+    });
+  } catch (error) {
+    if (!isLegacySchemaError(error)) throw error;
+
+    const legacyData: Prisma.MonitoringTaskUpdateInput = {
+      ...(typeof body.title === "string" ? { title: body.title } : {}),
+      ...(isRecord(body.config)
+        ? { config: body.config as unknown as Prisma.InputJsonValue }
+        : {}),
+    };
+
+    if (Object.keys(legacyData).length === 0) {
+      return NextResponse.json({ error: "no fields to update" }, { status: 400 });
+    }
+
+    updated = await prisma.monitoringTask.update({
+      where: { id },
+      data: legacyData,
+    });
+  }
 
   return NextResponse.json(updated);
 }

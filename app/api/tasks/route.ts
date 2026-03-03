@@ -8,6 +8,14 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return !!value && typeof value === "object";
 }
 
+function isLegacySchemaError(error: unknown): boolean {
+  if (!(error instanceof Error)) return false;
+  return (
+    error.name === "PrismaClientValidationError" &&
+    /Unknown argument `(?:scope|keywords|entities|sources|frequency|filters|summary)`/.test(error.message)
+  );
+}
+
 export async function GET() {
   const session = await auth();
   if (!session?.user?.id) {
@@ -46,20 +54,33 @@ export async function POST(req: Request) {
   const spec = normalizeTaskSpecColumns(body.config);
   const summary = typeof body.summary === "string" ? body.summary : null;
 
-  const task = await prisma.monitoringTask.create({
-    data: {
-      userId: session.user.id,
-      title: body.title,
-      config: body.config as unknown as Prisma.InputJsonValue,
-      scope: spec.scope,
-      keywords: spec.keywords,
-      entities: spec.entities === null ? undefined : (spec.entities as Prisma.InputJsonValue),
-      sources: spec.sources === null ? undefined : (spec.sources as Prisma.InputJsonValue),
-      frequency: spec.frequency,
-      filters: spec.filters === null ? undefined : (spec.filters as Prisma.InputJsonValue),
-      summary,
-    },
-  });
+  const fullData = {
+    userId: session.user.id,
+    title: body.title,
+    config: body.config as unknown as Prisma.InputJsonValue,
+    scope: spec.scope,
+    keywords: spec.keywords,
+    entities: spec.entities === null ? undefined : (spec.entities as Prisma.InputJsonValue),
+    sources: spec.sources === null ? undefined : (spec.sources as Prisma.InputJsonValue),
+    frequency: spec.frequency,
+    filters: spec.filters === null ? undefined : (spec.filters as Prisma.InputJsonValue),
+    summary,
+  } satisfies Prisma.MonitoringTaskUncheckedCreateInput;
+
+  let task;
+  try {
+    task = await prisma.monitoringTask.create({ data: fullData });
+  } catch (error) {
+    if (!isLegacySchemaError(error)) throw error;
+
+    task = await prisma.monitoringTask.create({
+      data: {
+        userId: session.user.id,
+        title: body.title,
+        config: body.config as unknown as Prisma.InputJsonValue,
+      } as Prisma.MonitoringTaskUncheckedCreateInput,
+    });
+  }
 
   return NextResponse.json(task, { status: 201 });
 }
