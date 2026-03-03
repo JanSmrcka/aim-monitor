@@ -2,22 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import {
-  Activity,
-  BarChart3,
-  BookOpen,
-  Building2,
-  Check,
-  Coins,
-  FileText,
-  Globe,
-  Newspaper,
-  Rss,
-  Settings,
-  ShieldCheck,
-  TrendingUp,
-  Users,
-} from "lucide-react";
+import { Check } from "lucide-react";
 
 interface Option {
   label: string;
@@ -33,58 +18,6 @@ interface OptionChipsProps {
   disabled: boolean;
   allowMultiple?: boolean;
   isAgentBusy?: boolean;
-}
-
-const optionIconMap = {
-  activity: Activity,
-  ai: Activity,
-  barchart: BarChart3,
-  barchart3: BarChart3,
-  chart: BarChart3,
-  chartline: BarChart3,
-  code: FileText,
-  company: Building2,
-  defi: Coins,
-  exchange: Building2,
-  gas: Activity,
-  globe: Globe,
-  news: Newspaper,
-  papers: BookOpen,
-  person: Users,
-  price: TrendingUp,
-  research: BookOpen,
-  rss: Rss,
-  security: ShieldCheck,
-  settings: Settings,
-  social: Users,
-  staking: Coins,
-  ticker: TrendingUp,
-  topic: Globe,
-  trend: TrendingUp,
-  trendingup: TrendingUp,
-  volatility: Activity,
-  web: Globe,
-} as const;
-
-function normalizeIconToken(value: string): string {
-  return value.toLowerCase().trim().replace(/[:_\-\s]+/g, "");
-}
-
-function renderOptionIcon(icon?: string) {
-  if (!icon) return null;
-  const raw = icon.trim();
-  if (!raw) return null;
-
-  const Icon = optionIconMap[normalizeIconToken(raw) as keyof typeof optionIconMap];
-  if (Icon) {
-    return <Icon className="h-3.5 w-3.5 opacity-90" />;
-  }
-
-  if (/^[a-z0-9:_\-\s]+$/i.test(raw)) {
-    return null;
-  }
-
-  return <span className="text-sm leading-none opacity-90">{raw}</span>;
 }
 
 export function OptionChips({
@@ -139,7 +72,7 @@ export function OptionChips({
               }
             >
               <span className="inline-flex items-center gap-1.5 text-sm">
-                {renderOptionIcon(opt.icon)}
+                {opt.icon ? <span className="text-sm leading-none opacity-90">{opt.icon}</span> : null}
                 {opt.label}
               </span>
               {isSelected ? <Check className="h-3.5 w-3.5 text-amber-100" /> : null}
