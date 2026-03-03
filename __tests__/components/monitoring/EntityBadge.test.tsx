@@ -22,4 +22,17 @@ describe("EntityBadge", () => {
     expect(companyBadge).toBeInTheDocument();
     expect(personBadge).toBeInTheDocument();
   });
+
+  it("supports long entity names without nowrap class", () => {
+    render(
+      <EntityBadge
+        type="company"
+        name="U.S. Securities and Exchange Commission (SEC)"
+      />
+    );
+
+    const badge = screen.getByTestId("entity-badge");
+    expect(badge).toHaveClass("break-words");
+    expect(screen.getByText(/U\.S\. Securities and Exchange Commission/)).toBeInTheDocument();
+  });
 });

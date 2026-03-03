@@ -46,8 +46,10 @@ export function MonitoringPreview({ task }: { task: MonitoringTask }) {
       <div className="border-b border-zinc-800/80 px-3 py-2">
         <p className="text-[10px] uppercase tracking-[0.22em] text-zinc-500">Monitor spec</p>
         <div className="mt-1 flex items-center gap-2">
-          <ShieldCheck className="h-4 w-4 text-amber-300" />
-          <p className="font-heading text-sm font-semibold text-zinc-100">{task.title ?? "In progress"}</p>
+          <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-amber-300" />
+          <p className="min-w-0 break-words font-heading text-sm font-semibold leading-snug text-zinc-100">
+            {task.title ?? "In progress"}
+          </p>
         </div>
       </div>
 
@@ -70,7 +72,7 @@ export function MonitoringPreview({ task }: { task: MonitoringTask }) {
                   <Badge
                     key={kw}
                     variant="secondary"
-                    className="border border-amber-200/20 bg-amber-300/10 text-[11px] text-amber-100"
+                    className="max-w-full border border-amber-200/20 bg-amber-300/10 text-[11px] text-amber-100 whitespace-normal break-words overflow-visible"
                   >
                     {kw}
                   </Badge>
@@ -104,10 +106,12 @@ export function MonitoringPreview({ task }: { task: MonitoringTask }) {
                   {task.sources.map((s) => (
                     <div
                       key={s.name}
-                      className="flex items-center gap-2 rounded-lg border border-zinc-800 bg-zinc-900/70 px-2 py-1.5 text-xs text-zinc-300"
+                      className="flex items-start gap-2 rounded-lg border border-zinc-800 bg-zinc-900/70 px-2 py-1.5 text-xs text-zinc-300"
                     >
-                      {sourceIcons[s.type] ?? <Globe className="h-3.5 w-3.5" />}
-                      {s.name}
+                      <span className="mt-0.5 shrink-0">
+                        {sourceIcons[s.type] ?? <Globe className="h-3.5 w-3.5" />}
+                      </span>
+                      <span className="min-w-0 break-words">{s.name}</span>
                     </div>
                   ))}
                 </div>

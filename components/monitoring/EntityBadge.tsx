@@ -21,10 +21,13 @@ export function EntityBadge({ type, name }: EntityBadgeProps) {
     <Badge
       data-testid="entity-badge"
       variant="outline"
-      className={cn("gap-1 border text-xs", colorMap[type] ?? "")}
+      className={cn(
+        "max-w-full gap-1 border text-xs whitespace-normal break-words overflow-visible",
+        colorMap[type] ?? ""
+      )}
     >
-      <span className="text-[9px] uppercase tracking-[0.14em] opacity-70">{type}</span>
-      {name}
+      <span className="shrink-0 text-[9px] uppercase tracking-[0.14em] opacity-70">{type}</span>
+      <span className="min-w-0 break-words">{name}</span>
     </Badge>
   );
 }

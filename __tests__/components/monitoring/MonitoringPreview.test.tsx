@@ -57,4 +57,12 @@ describe("MonitoringPreview", () => {
     const bar = screen.getByTestId("progress-bar");
     expect(bar).toBeInTheDocument();
   });
+
+  it("renders long title text", () => {
+    const task: MonitoringTask = {
+      title: "Bitcoin News & Policy - US Regulators and Global Enforcement Landscape",
+    };
+    render(<MonitoringPreview task={task} />);
+    expect(screen.getByText(/Bitcoin News & Policy/)).toBeInTheDocument();
+  });
 });
