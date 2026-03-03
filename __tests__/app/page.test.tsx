@@ -1,27 +1,28 @@
 import { render, screen } from "@testing-library/react";
 import { describe, it, expect, vi } from "vitest";
-import LoginPage from "@/app/login/page";
+import { LandingPage } from "@/components/landing/LandingPage";
 
-// Mock the auth module (server action can't run in jsdom)
+// Mock the auth module (server actions can't run in jsdom)
 vi.mock("@/lib/auth", () => ({
   signIn: vi.fn(),
 }));
 
-describe("Login page", () => {
-  it("renders app title", () => {
-    render(<LoginPage />);
-    expect(screen.getByText("AIM Monitor")).toBeInTheDocument();
+describe("Landing page", () => {
+  it("renders hero headline", () => {
+    render(<LandingPage />);
+    expect(screen.getByText(/Monitor what matters/)).toBeInTheDocument();
   });
 
-  it("renders sign-in description", () => {
-    render(<LoginPage />);
-    expect(screen.getByText("Sign in to your account")).toBeInTheDocument();
+  it("renders sign-in buttons", () => {
+    render(<LandingPage />);
+    const buttons = screen.getAllByRole("button", { name: /sign in/i });
+    expect(buttons.length).toBeGreaterThanOrEqual(2);
   });
 
-  it("renders GitHub login button", () => {
-    render(<LoginPage />);
+  it("renders get started CTA", () => {
+    render(<LandingPage />);
     expect(
-      screen.getByRole("button", { name: /continue with github/i })
+      screen.getByRole("button", { name: /get started/i })
     ).toBeInTheDocument();
   });
 });
