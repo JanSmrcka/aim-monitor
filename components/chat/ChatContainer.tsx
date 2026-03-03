@@ -15,8 +15,7 @@ import { useEffect, useState } from "react";
 export function ChatContainer() {
   const { messages, sendMessage, setMessages, status } = useChat({
     api: "/api/chat",
-    maxSteps: 10,
-  });
+  } as Parameters<typeof useChat>[0]);
   const { registerReset } = useChatContext();
   const [localInput, setLocalInput] = useState("");
 
@@ -34,12 +33,11 @@ export function ChatContainer() {
     if (!localInput.trim()) return;
     const text = localInput;
     setLocalInput("");
-    sendMessage({ role: "user", content: text });
+    sendMessage({ text });
   };
 
-  const handleAppend = async (msg: { role: "user"; content: string }) => {
-    sendMessage(msg);
-    return undefined;
+  const handleAppend = async (text: string) => {
+    sendMessage({ text });
   };
 
   const preview = <MonitoringPreview task={task} />;
@@ -48,7 +46,7 @@ export function ChatContainer() {
     <div className="flex h-full">
       {/* Chat area */}
       <div className="flex flex-1 flex-col">
-        <MessageList messages={messages} append={handleAppend} />
+        <MessageList messages={messages} append={handleAppend} task={task} />
         {isLoading && <ThinkingIndicator />}
         <ChatInput
           value={localInput}

@@ -1,41 +1,37 @@
 import type { UIMessage } from "ai";
 
-export function makeUserMessage(content: string, id = "msg-u1"): UIMessage {
+export function makeUserMessage(text: string, id = "msg-u1"): UIMessage {
   return {
     id,
     role: "user",
-    content,
-    parts: [{ type: "text", text: content }],
+    parts: [{ type: "text", text }],
   };
 }
 
-export function makeAssistantMessage(content: string, id = "msg-a1"): UIMessage {
+export function makeAssistantMessage(text: string, id = "msg-a1"): UIMessage {
   return {
     id,
     role: "assistant",
-    content,
-    parts: [{ type: "text", text: content }],
+    parts: [{ type: "text", text }],
   };
 }
 
 export function makeAssistantWithTool(
   toolName: string,
-  args: Record<string, unknown>,
+  input: Record<string, unknown>,
   id = "msg-t1"
 ): UIMessage {
   return {
     id,
     role: "assistant",
-    content: "",
     parts: [
       {
-        type: "tool-invocation",
-        toolInvocationId: `call-${id}`,
-        toolName,
-        args,
-        state: "result",
-        result: {},
-      },
+        type: `tool-${toolName}` as `tool-${string}`,
+        toolCallId: `call-${id}`,
+        state: "output-available",
+        input,
+        output: input,
+      } as UIMessage["parts"][number],
     ],
   };
 }
@@ -43,23 +39,21 @@ export function makeAssistantWithTool(
 export function makeAssistantWithTextAndTool(
   text: string,
   toolName: string,
-  args: Record<string, unknown>,
+  input: Record<string, unknown>,
   id = "msg-tt1"
 ): UIMessage {
   return {
     id,
     role: "assistant",
-    content: text,
     parts: [
       { type: "text", text },
       {
-        type: "tool-invocation",
-        toolInvocationId: `call-${id}`,
-        toolName,
-        args,
-        state: "result",
-        result: {},
-      },
+        type: `tool-${toolName}` as `tool-${string}`,
+        toolCallId: `call-${id}`,
+        state: "output-available",
+        input,
+        output: input,
+      } as UIMessage["parts"][number],
     ],
   };
 }

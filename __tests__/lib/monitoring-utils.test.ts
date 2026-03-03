@@ -1,4 +1,5 @@
 import { describe, it, expect } from "vitest";
+import type { UIMessage } from "ai";
 import { deriveMonitoringTask } from "@/lib/monitoring-utils";
 import {
   makeUserMessage,
@@ -103,8 +104,7 @@ describe("deriveMonitoringTask", () => {
   });
 
   it("handles messages without parts", () => {
-    const msg = { id: "m1", role: "assistant" as const, content: "hi" };
-    // @ts-expect-error - testing missing parts
+    const msg = { id: "m1", role: "assistant" as const, parts: [] as UIMessage["parts"] };
     expect(deriveMonitoringTask([msg])).toEqual({});
   });
 });

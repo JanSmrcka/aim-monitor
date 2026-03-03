@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { tool } from "ai";
+import { tool, jsonSchema } from "ai";
 
 export const presentOptionsSchema = z.object({
   question: z.string().describe("The question to ask the user"),
@@ -56,14 +56,92 @@ export const finalizeTaskSchema = z.object({
 export const tools = {
   present_options: tool({
     description: "Present options to the user as clickable chips",
-    parameters: presentOptionsSchema,
+    parameters: jsonSchema({
+      type: "object",
+      properties: {
+        question: { type: "string", description: "The question to ask the user" },
+        options: {
+          type: "array",
+          description: "Available options",
+          items: {
+            type: "object",
+            properties: {
+              label: { type: "string" },
+              value: { type: "string" },
+              description: { type: "string" },
+              icon: { type: "string" },
+            },
+            required: ["label", "value"],
+            additionalProperties: false,
+          },
+          minItems: 1,
+        },
+        allowMultiple: { type: "boolean", description: "Allow selecting multiple options" },
+      },
+      required: ["question", "options"],
+      additionalProperties: false,
+    }),
+    execute: async (args) => args,
   }),
   update_monitoring_task: tool({
     description: "Update the monitoring task configuration based on user responses",
-    parameters: updateMonitoringTaskSchema,
+    parameters: jsonSchema({
+      type: "object",
+      properties: {
+        title: { type: "string" },
+        scope: { type: "string" },
+        keywords: { type: "array", items: { type: "string" } },
+        entities: {
+          type: "array",
+          items: {
+            type: "object",
+            properties: {
+              type: { type: "string", enum: ["company", "person", "topic", "product", "ticker"] },
+              name: { type: "string" },
+              description: { type: "string" },
+            },
+            required: ["type", "name"],
+            additionalProperties: false,
+          },
+        },
+        sources: {
+          type: "array",
+          items: {
+            type: "object",
+            properties: {
+              type: { type: "string", enum: ["web", "news", "social", "sec", "arxiv", "rss", "custom"] },
+              name: { type: "string" },
+            },
+            required: ["type", "name"],
+            additionalProperties: false,
+          },
+        },
+        frequency: { type: "string", enum: ["realtime", "hourly", "daily", "weekly"] },
+        filters: {
+          type: "object",
+          properties: {
+            language: { type: "string" },
+            region: { type: "string" },
+            minRelevance: { type: "number" },
+            excludeKeywords: { type: "array", items: { type: "string" } },
+          },
+          additionalProperties: false,
+        },
+      },
+      additionalProperties: false,
+    }),
+    execute: async (args) => args,
   }),
   finalize_task: tool({
     description: "Finalize the monitoring task when all required fields are defined",
-    parameters: finalizeTaskSchema,
+    parameters: jsonSchema({
+      type: "object",
+      properties: {
+        summary: { type: "string", description: "Summary of the finalized monitoring task" },
+      },
+      required: ["summary"],
+      additionalProperties: false,
+    }),
+    execute: async (args) => args,
   }),
 };

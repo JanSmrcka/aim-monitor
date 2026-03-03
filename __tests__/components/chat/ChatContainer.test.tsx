@@ -4,11 +4,9 @@ import { ChatContainer } from "@/components/chat/ChatContainer";
 
 const mockUseChat = {
   messages: [],
-  input: "",
   status: "ready" as const,
-  setInput: vi.fn(),
-  handleSubmit: vi.fn(),
-  append: vi.fn(),
+  sendMessage: vi.fn(),
+  setMessages: vi.fn(),
 };
 
 vi.mock("@ai-sdk/react", () => ({
@@ -31,7 +29,7 @@ describe("ChatContainer", () => {
     vi.mocked(useChat).mockReturnValue({
       ...mockUseChat,
       status: "streaming" as const,
-    } as ReturnType<typeof useChat>);
+    } as unknown as ReturnType<typeof useChat>);
 
     render(<ChatContainer />);
     expect(screen.getByTestId("thinking-indicator")).toBeInTheDocument();

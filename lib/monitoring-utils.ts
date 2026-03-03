@@ -1,4 +1,5 @@
 import type { UIMessage } from "ai";
+import { isToolUIPart, getToolName } from "ai";
 import type { MonitoringTask } from "@/lib/types";
 
 export function deriveMonitoringTask(messages: UIMessage[]): MonitoringTask {
@@ -8,17 +9,17 @@ export function deriveMonitoringTask(messages: UIMessage[]): MonitoringTask {
     if (!msg.parts) continue;
     for (const part of msg.parts) {
       if (
-        part.type === "tool-invocation" &&
-        part.toolName === "update_monitoring_task" &&
-        part.state === "result"
+        isToolUIPart(part) &&
+        getToolName(part) === "update_monitoring_task" &&
+        part.state === "output-available"
       ) {
-        const args = part.args as Partial<MonitoringTask>;
+        const input = part.input as Partial<MonitoringTask>;
         task = {
           ...task,
-          ...args,
-          entities: args.entities ?? task.entities,
-          sources: args.sources ?? task.sources,
-          filters: { ...task.filters, ...args.filters },
+          ...input,
+          entities: input.entities ?? task.entities,
+          sources: input.sources ?? task.sources,
+          filters: { ...task.filters, ...input.filters },
         };
       }
     }

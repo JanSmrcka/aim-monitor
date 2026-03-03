@@ -1,16 +1,18 @@
 "use client";
 
 import type { UIMessage } from "ai";
+import type { MonitoringTask } from "@/lib/types";
 import { MessageBubble } from "@/components/chat/MessageBubble";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useEffect, useRef } from "react";
 
 interface MessageListProps {
   messages: UIMessage[];
-  append: (message: { role: "user"; content: string }) => Promise<string | null | undefined>;
+  append: (text: string) => void;
+  task?: MonitoringTask;
 }
 
-export function MessageList({ messages, append }: MessageListProps) {
+export function MessageList({ messages, append, task }: MessageListProps) {
   const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -26,6 +28,7 @@ export function MessageList({ messages, append }: MessageListProps) {
             message={msg}
             append={append}
             isLatest={idx === messages.length - 1}
+            task={task}
           />
         ))}
         <div ref={bottomRef} />
