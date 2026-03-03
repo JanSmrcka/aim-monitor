@@ -61,4 +61,17 @@ describe("OptionChips", () => {
     await userEvent.click(confirm);
     expect(onSelect).toHaveBeenCalledWith("web, news");
   });
+
+  it("shows lock helper while agent busy", () => {
+    render(
+      <OptionChips
+        question="Pick"
+        options={options}
+        onSelect={vi.fn()}
+        disabled={true}
+        isAgentBusy
+      />
+    );
+    expect(screen.getByText(/wait for response to finish/i)).toBeInTheDocument();
+  });
 });

@@ -10,9 +10,10 @@ interface MessageListProps {
   messages: UIMessage[];
   append: (text: string) => void;
   task?: MonitoringTask;
+  interactionLocked?: boolean;
 }
 
-export function MessageList({ messages, append, task }: MessageListProps) {
+export function MessageList({ messages, append, task, interactionLocked = false }: MessageListProps) {
   const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -29,6 +30,7 @@ export function MessageList({ messages, append, task }: MessageListProps) {
             append={append}
             isLatest={idx === messages.length - 1}
             task={task}
+            interactionLocked={interactionLocked}
           />
         ))}
         <div ref={bottomRef} />

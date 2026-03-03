@@ -16,9 +16,10 @@ interface MessageBubbleProps {
   append: (text: string) => void;
   isLatest?: boolean;
   task?: MonitoringTask;
+  interactionLocked?: boolean;
 }
 
-type PresentOption = { label: string; value: string; description?: string };
+type PresentOption = { label: string; value: string; description?: string; icon?: string };
 type PresentOptionsPayload = {
   question: string;
   options: PresentOption[];
@@ -47,6 +48,7 @@ function parsePresentOptionsPayload(part: { input?: unknown; output?: unknown })
       label,
       value,
       description: typeof option.description === "string" ? option.description : undefined,
+      icon: typeof option.icon === "string" ? option.icon : undefined,
     });
   }
 
@@ -73,7 +75,13 @@ function parseFinalizeSummary(part: { input?: unknown; output?: unknown }): stri
   return typeof candidate?.summary === "string" && candidate.summary ? candidate.summary : null;
 }
 
-export function MessageBubble({ message, append, isLatest, task }: MessageBubbleProps) {
+export function MessageBubble({
+  message,
+  append,
+  isLatest,
+  task,
+  interactionLocked = false,
+}: MessageBubbleProps) {
   const isUser = message.role === "user";
   const [chipsDisabled, setChipsDisabled] = useState(false);
   const [dismissed, setDismissed] = useState(false);
@@ -127,16 +135,16 @@ export function MessageBubble({ message, append, isLatest, task }: MessageBubble
     >
       <div
         className={cn(
-          "max-w-[80%] space-y-2 rounded-lg px-4 py-2",
+          "max-w-[85%] space-y-2.5 rounded-2xl border px-3.5 py-3 shadow-[0_8px_24px_rgba(0,0,0,0.24)]",
           isUser
-            ? "bg-primary text-primary-foreground"
-            : "bg-muted text-foreground"
+            ? "border-amber-300/35 bg-gradient-to-br from-amber-300 to-amber-400 text-zinc-950"
+            : "border-zinc-700/80 bg-zinc-900/90 text-zinc-100"
         )}
       >
         {message.parts.map((part, i) => {
           if (part.type === "text") {
             return (
-              <p key={i} className="whitespace-pre-wrap text-sm">
+              <p key={i} className="whitespace-pre-wrap text-sm leading-relaxed">
                 {part.text}
               </p>
             );
@@ -148,7 +156,7 @@ export function MessageBubble({ message, append, isLatest, task }: MessageBubble
               if (!payload) {
                 if (isPresentOptionsPending(part)) {
                   return (
-                    <p key={i} className="text-sm text-muted-foreground">
+                    <p key={i} className="text-sm text-zinc-400">
                       Preparing options...
                     </p>
                   );
@@ -161,8 +169,9 @@ export function MessageBubble({ message, append, isLatest, task }: MessageBubble
                   question={payload.question}
                   options={payload.options}
                   onSelect={handleChipSelect}
-                  disabled={chipsDisabled || !isLatest!}
+                  disabled={chipsDisabled || !isLatest! || interactionLocked}
                   allowMultiple={payload.allowMultiple}
+                  isAgentBusy={interactionLocked}
                 />
               );
             }
@@ -176,6 +185,7 @@ export function MessageBubble({ message, append, isLatest, task }: MessageBubble
                   onConfirm={() => saveMutation.mutate()}
                   onDismiss={() => setDismissed(true)}
                   isLoading={saveMutation.isPending}
+                  disabled={interactionLocked}
                 />
               );
             }

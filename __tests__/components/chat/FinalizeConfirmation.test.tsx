@@ -35,4 +35,18 @@ describe("FinalizeConfirmation", () => {
     await userEvent.click(screen.getByRole("button", { name: /keep editing/i }));
     expect(onDismiss).toHaveBeenCalled();
   });
+
+  it("disables actions when externally locked", () => {
+    render(
+      <FinalizeConfirmation
+        summary="test"
+        onConfirm={vi.fn()}
+        onDismiss={vi.fn()}
+        isLoading={false}
+        disabled
+      />
+    );
+    expect(screen.getByRole("button", { name: /create monitor/i })).toBeDisabled();
+    expect(screen.getByRole("button", { name: /keep editing/i })).toBeDisabled();
+  });
 });

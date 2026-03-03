@@ -86,6 +86,34 @@ describe("MessageBubble", () => {
     expect(screen.getByRole("button", { name: "News" })).toBeInTheDocument();
   });
 
+  it("locks option chips while interaction is locked", () => {
+    const message = {
+      id: "msg-tool-locked",
+      role: "assistant",
+      parts: [
+        {
+          type: "tool-present_options",
+          toolCallId: "call-lock",
+          state: "output-available",
+          input: {
+            question: "Pick one",
+            options: [{ label: "News", value: "news" }],
+          },
+          output: {
+            question: "Pick one",
+            options: [{ label: "News", value: "news" }],
+          },
+        },
+      ],
+    } as unknown as UIMessage;
+
+    renderWithQuery(
+      <MessageBubble message={message} append={noop} isLatest interactionLocked />
+    );
+    expect(screen.getByRole("button", { name: "News" })).toBeDisabled();
+    expect(screen.getByText(/wait for response to finish/i)).toBeInTheDocument();
+  });
+
   it("does not crash on invalid present_options payload", () => {
     const message = {
       id: "msg-tool-invalid",
