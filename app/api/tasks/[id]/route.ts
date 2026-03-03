@@ -9,11 +9,27 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 }
 
 function isLegacySchemaError(error: unknown): boolean {
-  if (!(error instanceof Error)) return false;
-  return (
-    error.name === "PrismaClientValidationError" &&
-    /Unknown argument `(?:scope|keywords|entities|sources|frequency|filters|summary)`/.test(error.message)
-  );
+  const legacyFieldPattern = /(?:scope|keywords|entities|sources|frequency|filters|summary)/;
+
+  if (error instanceof Error) {
+    if (
+      error.name === "PrismaClientValidationError" &&
+      /Unknown argument `(?:scope|keywords|entities|sources|frequency|filters|summary)`/.test(error.message)
+    ) {
+      return true;
+    }
+  }
+
+  if (!error || typeof error !== "object") return false;
+
+  const maybeCode = (error as { code?: unknown }).code;
+  if (maybeCode !== "P2022") return false;
+
+  const maybeMeta = (error as { meta?: unknown }).meta;
+  if (!maybeMeta || typeof maybeMeta !== "object") return true;
+
+  const maybeColumn = (maybeMeta as { column?: unknown }).column;
+  return typeof maybeColumn === "string" ? legacyFieldPattern.test(maybeColumn) : true;
 }
 
 export async function GET(_req: Request, { params }: { params: Promise<{ id: string }> }) {
