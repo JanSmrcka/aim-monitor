@@ -3,7 +3,9 @@ import { useQuery } from "@tanstack/react-query";
 interface TaskItem {
   id: string;
   title: string;
-  config: { frequency?: string; scope?: string };
+  scope?: string | null;
+  frequency?: string | null;
+  config?: { frequency?: string; scope?: string };
   createdAt: string;
   updatedAt: string;
 }

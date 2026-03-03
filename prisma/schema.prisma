@@ -61,6 +61,13 @@ model MonitoringTask {
   userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   title     String
+  scope     String?
+  keywords  String[] @default([])
+  entities  Json?
+  sources   Json?
+  frequency String?
+  filters   Json?
+  summary   String?
   config    Json
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

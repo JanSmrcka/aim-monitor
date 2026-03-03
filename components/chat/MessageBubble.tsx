@@ -88,18 +88,25 @@ export function MessageBubble({
   const queryClient = useQueryClient();
 
   const saveMutation = useMutation({
-    mutationFn: async () => {
+    mutationFn: async (payload?: { summary?: string }) => {
       const res = await fetch("/api/tasks", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title: task?.title ?? "Untitled Monitor", config: task }),
+        body: JSON.stringify({
+          title: task?.title ?? "Untitled Monitor",
+          config: task,
+          summary: payload?.summary,
+        }),
       });
       if (!res.ok) throw new Error("Failed to save");
       return res.json();
     },
-    onSuccess: () => {
+    onSuccess: (createdTask) => {
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
       toast.success("Monitor created!");
+      if (createdTask?.id && typeof window !== "undefined") {
+        window.location.assign(`/dashboard/monitors/${createdTask.id as string}`);
+      }
     },
     onError: () => {
       toast.error("Failed to create monitor");
@@ -182,7 +189,7 @@ export function MessageBubble({
                 <FinalizeConfirmation
                   key={i}
                   summary={summary}
-                  onConfirm={() => saveMutation.mutate()}
+                  onConfirm={() => saveMutation.mutate({ summary })}
                   onDismiss={() => setDismissed(true)}
                   isLoading={saveMutation.isPending}
                   disabled={interactionLocked}

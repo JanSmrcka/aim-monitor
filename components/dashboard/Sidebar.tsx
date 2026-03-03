@@ -9,7 +9,9 @@ import { Plus, Radar } from "lucide-react";
 interface TaskItem {
   id: string;
   title: string;
-  config: { frequency?: string; scope?: string };
+  scope?: string | null;
+  frequency?: string | null;
+  config?: { frequency?: string; scope?: string };
 }
 
 interface SidebarProps {
@@ -17,9 +19,16 @@ interface SidebarProps {
   isLoading: boolean;
   onNewChat: () => void;
   onSelectTask: (id: string) => void;
+  selectedTaskId?: string;
 }
 
-export function Sidebar({ tasks, isLoading, onNewChat, onSelectTask }: SidebarProps) {
+export function Sidebar({
+  tasks,
+  isLoading,
+  onNewChat,
+  onSelectTask,
+  selectedTaskId,
+}: SidebarProps) {
   return (
     <div className="flex h-full w-[280px] min-h-0 flex-col">
       <div className="space-y-3 border-b border-amber-100/10 px-3 py-3">
@@ -53,7 +62,12 @@ export function Sidebar({ tasks, isLoading, onNewChat, onSelectTask }: SidebarPr
             ))}
           </div>
         ) : (
-          <TaskList tasks={tasks} isLoading={false} onSelectTask={onSelectTask} />
+          <TaskList
+            tasks={tasks}
+            isLoading={false}
+            onSelectTask={onSelectTask}
+            selectedTaskId={selectedTaskId}
+          />
         )}
       </ScrollArea>
     </div>

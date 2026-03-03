@@ -8,6 +8,7 @@ import { Menu, Sparkles } from "lucide-react";
 import { useTasks } from "@/lib/hooks/use-tasks";
 import { useChatContext } from "@/lib/chat-context";
 import { useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
 
 interface AppShellProps {
   user: {
@@ -23,14 +24,21 @@ export function AppShell({ user, children }: AppShellProps) {
   const { data: tasks = [], isLoading } = useTasks();
   const { resetChat } = useChatContext();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const router = useRouter();
+  const pathname = usePathname();
+
+  const selectedTaskId =
+    pathname.startsWith("/dashboard/monitors/") ? pathname.replace("/dashboard/monitors/", "") : undefined;
 
   const handleNewChat = () => {
     resetChat();
+    setSidebarOpen(false);
+    router.push("/dashboard");
   };
 
   const handleSelectTask = (id: string) => {
-    void id;
-    // TODO: load task
+    setSidebarOpen(false);
+    router.push(`/dashboard/monitors/${id}`);
   };
 
   const sidebarContent = (
@@ -39,6 +47,7 @@ export function AppShell({ user, children }: AppShellProps) {
       isLoading={isLoading}
       onNewChat={handleNewChat}
       onSelectTask={handleSelectTask}
+      selectedTaskId={selectedTaskId}
     />
   );
 
