@@ -13,13 +13,23 @@ export default async function MonitorDetailPage({ params }: { params: Promise<{ 
   }
 
   const { id } = await params;
-  const task = await prisma.monitoringTask.findUnique({ where: { id } });
+  const task = await prisma.monitoringTask.findUnique({
+    where: { id },
+    select: {
+      id: true,
+      userId: true,
+      title: true,
+      config: true,
+      createdAt: true,
+      updatedAt: true,
+    },
+  });
 
   if (!task || task.userId !== session.user.id) {
     notFound();
   }
 
-  const storedTask = task;
+  const storedTask = task as typeof task & { summary?: string | null };
   const spec = monitoringTaskFromStoredTask(storedTask);
 
   return (

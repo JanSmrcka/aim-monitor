@@ -13,6 +13,14 @@ export default async function DashboardPage() {
   const tasks = await prisma.monitoringTask.findMany({
     where: { userId: session.user.id },
     orderBy: { updatedAt: "desc" },
+    select: {
+      id: true,
+      userId: true,
+      title: true,
+      config: true,
+      createdAt: true,
+      updatedAt: true,
+    },
   });
 
   const normalized = tasks.map((task) => {

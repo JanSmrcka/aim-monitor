@@ -25,6 +25,14 @@ export async function GET() {
   const tasks = await prisma.monitoringTask.findMany({
     where: { userId: session.user.id },
     orderBy: { createdAt: "desc" },
+    select: {
+      id: true,
+      userId: true,
+      title: true,
+      config: true,
+      createdAt: true,
+      updatedAt: true,
+    },
   });
 
   const normalized = tasks.map((task) => {
@@ -45,7 +53,12 @@ export async function POST(req: Request) {
     return new Response("Unauthorized", { status: 401 });
   }
 
-  const body = await req.json();
+  let body: unknown;
+  try {
+    body = await req.json();
+  } catch {
+    return NextResponse.json({ error: "invalid_json" }, { status: 400 });
+  }
 
   if (!isRecord(body) || typeof body.title !== "string" || !isRecord(body.config)) {
     return NextResponse.json({ error: "title and config required" }, { status: 400 });

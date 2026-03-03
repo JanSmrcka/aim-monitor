@@ -71,4 +71,7 @@ model MonitoringTask {
   config    Json
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([userId, createdAt])
+  @@index([userId, updatedAt])
 }

@@ -5,6 +5,8 @@ import { systemPrompt } from "@/lib/system-prompt";
 import { tools } from "@/lib/tools";
 import { toModelMessages } from "@/lib/to-model-messages";
 
+const chatModel = process.env.AZURE_CHAT_MODEL || "gpt-5-hiring";
+
 export async function POST(req: Request) {
   const session = await auth();
   if (!session?.user) {
@@ -31,7 +33,7 @@ export async function POST(req: Request) {
 
   try {
     const result = streamText({
-      model: azure.responses("gpt-5-hiring"),
+      model: azure.responses(chatModel),
       system: systemPrompt,
       messages: messages as unknown as Parameters<typeof streamText>[0]["messages"] & [],
       tools,

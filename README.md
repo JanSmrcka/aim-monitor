@@ -139,6 +139,7 @@ Do not rely on `db push` in production.
 | `AUTH_GITHUB_SECRET` | yes | GitHub OAuth app client secret |
 | `AZURE_RESOURCE_NAME` | yes (for chat) | Azure OpenAI resource name |
 | `AZURE_API_KEY` | yes (for chat) | Azure OpenAI API key |
+| `AZURE_CHAT_MODEL` | optional | Azure deployment/model name override (default: `gpt-5-hiring`) |
 | `NEXTAUTH_URL` | optional | Useful in some local/prod setups |
 
 Note: the UI can load without Azure envs, but `/dashboard/new` chat generation will not work.

@@ -23,7 +23,17 @@ export async function GET(_req: Request, { params }: { params: Promise<{ id: str
   }
 
   const { id } = await params;
-  const task = await prisma.monitoringTask.findUnique({ where: { id } });
+  const task = await prisma.monitoringTask.findUnique({
+    where: { id },
+    select: {
+      id: true,
+      userId: true,
+      title: true,
+      config: true,
+      createdAt: true,
+      updatedAt: true,
+    },
+  });
 
   if (!task || task.userId !== session.user.id) {
     return new Response("Not found", { status: 404 });
@@ -44,13 +54,25 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
   }
 
   const { id } = await params;
-  const task = await prisma.monitoringTask.findUnique({ where: { id } });
+  const task = await prisma.monitoringTask.findUnique({
+    where: { id },
+    select: {
+      id: true,
+      userId: true,
+    },
+  });
 
   if (!task || task.userId !== session.user.id) {
     return new Response("Not found", { status: 404 });
   }
 
-  const body = await req.json();
+  let body: unknown;
+  try {
+    body = await req.json();
+  } catch {
+    return NextResponse.json({ error: "invalid_json" }, { status: 400 });
+  }
+
   if (!isRecord(body)) {
     return NextResponse.json({ error: "invalid body" }, { status: 400 });
   }
@@ -110,7 +132,13 @@ export async function DELETE(_req: Request, { params }: { params: Promise<{ id: 
   }
 
   const { id } = await params;
-  const task = await prisma.monitoringTask.findUnique({ where: { id } });
+  const task = await prisma.monitoringTask.findUnique({
+    where: { id },
+    select: {
+      id: true,
+      userId: true,
+    },
+  });
 
   if (!task || task.userId !== session.user.id) {
     return new Response("Not found", { status: 404 });

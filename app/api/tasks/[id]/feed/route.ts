@@ -17,7 +17,17 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
   }
 
   const { id } = await params;
-  const task = await prisma.monitoringTask.findUnique({ where: { id } });
+  const task = await prisma.monitoringTask.findUnique({
+    where: { id },
+    select: {
+      id: true,
+      userId: true,
+      title: true,
+      config: true,
+      createdAt: true,
+      updatedAt: true,
+    },
+  });
 
   if (!task || task.userId !== session.user.id) {
     return new Response("Not found", { status: 404 });

@@ -4,7 +4,7 @@ import { describe, it, expect, vi } from "vitest";
 import { UserMenu } from "@/components/dashboard/UserMenu";
 import { mockUser } from "@/__tests__/fixtures/data";
 
-vi.mock("@/lib/auth", () => ({
+vi.mock("next-auth/react", () => ({
   signOut: vi.fn(),
 }));
 
