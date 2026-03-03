@@ -20,7 +20,7 @@ export function BottomCTA() {
         >
           <button
             type="submit"
-            className="rounded-xl bg-landing-accent px-10 py-4 font-[family-name:var(--font-body)] text-sm font-medium text-white transition-all duration-200 hover:bg-landing-accent-hover hover:shadow-[0_0_32px_rgba(59,130,246,0.3)]"
+            className="rounded-xl bg-landing-accent px-10 py-4 font-[family-name:var(--font-body)] text-sm font-medium text-white transition-all duration-200 hover:bg-landing-accent-hover hover:shadow-[0_0_32px_rgba(245,158,11,0.34)]"
           >
             Sign in with GitHub
           </button>

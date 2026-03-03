@@ -36,7 +36,7 @@ export function Features() {
         <div className="mt-12 grid gap-6 sm:grid-cols-2">
           {features.map((feature, i) => (
             <ScrollReveal key={feature.title} delay={i * 100}>
-              <div className="group rounded-xl border border-landing-border bg-landing-surface/50 p-6 transition-all duration-300 hover:border-landing-muted/30">
+              <div className="group rounded-xl border border-landing-border bg-landing-surface/50 p-6 transition-all duration-300 hover:border-landing-accent/35 hover:bg-landing-surface/80">
                 <span className="text-lg text-landing-accent">{feature.icon}</span>
                 <h3 className="mt-3 font-[family-name:var(--font-body)] text-sm font-medium text-landing-text">
                   {feature.title}

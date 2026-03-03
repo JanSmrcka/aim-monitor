@@ -5,7 +5,7 @@ export function DemoPreview() {
     <section className="px-6 pb-16 pt-0 sm:pb-24">
       <ScrollReveal className="mx-auto max-w-5xl">
         <div className="sm:[perspective:1200px]">
-          <div className="overflow-hidden rounded-xl border border-landing-border bg-landing-surface shadow-2xl shadow-landing-accent/5 sm:[transform:rotateX(2deg)]">
+          <div className="overflow-hidden rounded-xl border border-landing-border bg-landing-surface shadow-2xl shadow-landing-accent/10 sm:[transform:rotateX(2deg)]">
             {/* Browser chrome */}
             <div className="flex items-center gap-2 border-b border-landing-border px-4 py-3">
               <div className="flex gap-1.5">
@@ -52,8 +52,8 @@ export function DemoPreview() {
                   {/* Option chips */}
                   <div className="flex flex-wrap gap-2 pl-9">
                     <div className="h-7 w-20 rounded-full border border-landing-accent/30 bg-landing-accent/5" />
-                    <div className="h-7 w-24 rounded-full border border-landing-border bg-landing-surface" />
-                    <div className="h-7 w-16 rounded-full border border-landing-border bg-landing-surface" />
+                    <div className="h-7 w-24 rounded-full border border-landing-accent/20 bg-landing-surface" />
+                    <div className="h-7 w-16 rounded-full border border-landing-accent/20 bg-landing-surface" />
                   </div>
                 </div>
               </div>
