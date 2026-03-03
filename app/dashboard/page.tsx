@@ -1,24 +1,12 @@
-import { auth, signOut } from "@/lib/auth";
-import { Button } from "@/components/ui/button";
-import { redirect } from "next/navigation";
-
-export default async function Dashboard() {
-  const session = await auth();
-  if (!session?.user) redirect("/");
-
+export default function DashboardPage() {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center gap-4">
-      <h1 className="text-2xl font-bold">Welcome, {session.user.name}</h1>
-      <form
-        action={async () => {
-          "use server";
-          await signOut({ redirectTo: "/" });
-        }}
-      >
-        <Button variant="outline" type="submit">
-          Sign out
-        </Button>
-      </form>
+    <div className="flex h-full items-center justify-center">
+      <div className="text-center">
+        <h2 className="text-xl font-semibold">Welcome to Aim Monitor</h2>
+        <p className="mt-2 text-muted-foreground">
+          Click &quot;New Monitor&quot; to start building a monitoring task
+        </p>
+      </div>
     </div>
   );
 }
