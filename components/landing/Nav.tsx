@@ -10,7 +10,7 @@ function GitHubIcon(props: React.SVGProps<SVGSVGElement>) {
 
 export function Nav() {
   return (
-    <nav className="fixed top-0 z-50 w-full border-b border-transparent backdrop-blur-md transition-colors duration-300 [border-image:linear-gradient(to_right,transparent,#27272A_20%,#27272A_80%,transparent)_1]">
+    <nav className="fixed top-0 z-50 w-full border-b border-transparent bg-landing-bg/55 backdrop-blur-md transition-colors duration-300 [border-image:linear-gradient(to_right,transparent,var(--color-landing-border)_20%,var(--color-landing-border)_80%,transparent)_1]">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
         <span className="font-[family-name:var(--font-heading)] text-xl font-semibold text-landing-text tracking-tight">
           aim
@@ -23,7 +23,7 @@ export function Nav() {
         >
           <button
             type="submit"
-            className="flex items-center gap-2 rounded-lg border border-landing-border px-4 py-2 text-sm font-medium text-landing-muted transition-all duration-200 hover:border-landing-muted hover:text-landing-text"
+            className="flex items-center gap-2 rounded-lg border border-landing-border bg-landing-surface/50 px-4 py-2 text-sm font-medium text-landing-muted transition-all duration-200 hover:border-landing-accent/40 hover:bg-landing-surface hover:text-landing-text"
           >
             <GitHubIcon className="h-4 w-4" />
             Sign in

@@ -7,6 +7,7 @@ import {
   JetBrains_Mono,
 } from "next/font/google";
 import { ThemeProvider } from "next-themes";
+import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -48,16 +49,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" className="dark" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${sora.variable} ${dmSans.variable} ${jetbrainsMono.variable} antialiased`}
       >
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
+          forcedTheme="dark"
+          enableSystem={false}
           disableTransitionOnChange
         >
           {children}
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>

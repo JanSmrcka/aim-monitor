@@ -1,54 +1,182 @@
 # Aim Monitor
 
-AI-powered monitoring task builder. Describe what you want to monitor, AI creates the task.
+AI-powered monitoring task builder prototype.
+
+Users describe what they want to monitor, an LLM agent asks structured follow-ups through clickable options, and the app continuously builds a live monitor spec.
+
+## Current Product Flow
+
+- `/` - landing page
+- `/dashboard` - monitor board (all monitors + latest 3 feed previews per monitor)
+- `/dashboard/new` - monitor creation flow (chat + live monitor spec)
+- `/dashboard/monitors/[id]` - monitor detail (feed timeline + monitor spec)
+
+## Monitoring Schema
+
+Core spec object used by the chat builder:
+
+```ts
+type MonitoringTask = {
+  title?: string
+  scope?: string
+  keywords?: string[]
+  entities?: Array<{
+    type: "company" | "person" | "topic" | "product" | "ticker"
+    name: string
+    description?: string
+  }>
+  sources?: Array<{
+    type: "web" | "news" | "social" | "sec" | "arxiv" | "rss" | "custom"
+    name: string
+  }>
+  frequency?: "realtime" | "hourly" | "daily" | "weekly"
+  filters?: {
+    language?: string
+    region?: string
+    minRelevance?: number
+    excludeKeywords?: string[]
+  }
+}
+```
+
+DB stores both:
+
+- normalized task columns (`scope`, `keywords`, `entities`, `sources`, `frequency`, `filters`, `summary`)
+- full raw `config` JSON for compatibility/fallback
+
+## Agent Contract
+
+The LLM is tool-driven (not free-form only):
+
+- `present_options` - renders clickable options in chat
+- `update_monitoring_task` - sends structured partial updates
+- `finalize_task` - sends final summary for confirmation
+
+This keeps UI deterministic and easy to validate/persist.
+
+## Feed Architecture (Mock Today, Live-Ready)
+
+- API: `GET /api/tasks/[id]/feed`
+- Source: mock provider (`lib/feeds/mock-provider.ts`)
+- UI refresh: polling every 15s via React Query
+- Response contract is stable, so provider can be swapped to real ingestion later.
 
 ## Tech Stack
 
-Next.js 16 · React 19 · TypeScript · Prisma · PostgreSQL · NextAuth (GitHub OAuth) · shadcn/ui · Tailwind CSS 4 · Vercel
+Next.js 16 · React 19 · TypeScript · Prisma · PostgreSQL · NextAuth (GitHub OAuth) · AI SDK · shadcn/ui · Tailwind CSS 4 · Vercel
 
-## Setup
+## Local Setup
+
+1. Install dependencies:
 
 ```bash
 pnpm install
-cp .env.example .env   # fill in DATABASE_URL, AUTH_SECRET, GitHub OAuth creds
-pnpm prisma db push
+```
+
+2. Copy env file and fill values:
+
+```bash
+cp .env.example .env
+```
+
+3. Start PostgreSQL locally (required before migrations).
+
+Homebrew example:
+
+```bash
+brew install postgresql@16
+brew services start postgresql@16
+pg_isready
+```
+
+Docker example:
+
+```bash
+docker run --name aim-postgres \
+  -e POSTGRES_USER=<your-user> \
+  -e POSTGRES_PASSWORD=<your-password> \
+  -e POSTGRES_DB=<your-db-name> \
+  -p 5432:5432 -d postgres:16
+```
+
+Optional DB connectivity check:
+
+```bash
+psql "$DATABASE_URL" -c "select 1;"
+```
+
+4. Run migrations:
+
+```bash
+pnpm prisma migrate dev
+```
+
+5. Start dev server:
+
+```bash
 pnpm dev
 ```
 
-### Environment Variables
+Open `http://localhost:3000`.
 
-| Variable | Description |
-|---|---|
-| `DATABASE_URL` | PostgreSQL connection string |
-| `AUTH_SECRET` | NextAuth secret (`openssl rand -base64 33`) |
-| `AUTH_GITHUB_ID` | GitHub OAuth App ID |
-| `AUTH_GITHUB_SECRET` | GitHub OAuth App Secret |
+## Deploy Notes (Vercel)
 
-## Scripts
+Before/with deploy, run DB migrations in the target environment:
+
+```bash
+pnpm prisma migrate deploy
+```
+
+Do not rely on `db push` in production.
+
+## Environment Variables
+
+| Variable | Required | Description |
+|---|---|---|
+| `DATABASE_URL` | yes | PostgreSQL connection string |
+| `AUTH_SECRET` | yes | Auth.js secret (generate with `openssl rand -base64 33`) |
+| `AUTH_GITHUB_ID` | yes | GitHub OAuth app client ID |
+| `AUTH_GITHUB_SECRET` | yes | GitHub OAuth app client secret |
+| `AZURE_RESOURCE_NAME` | yes (for chat) | Azure OpenAI resource name |
+| `AZURE_API_KEY` | yes (for chat) | Azure OpenAI API key |
+| `AZURE_CHAT_MODEL` | optional | Azure deployment/model name override (default: `gpt-5-hiring`) |
+| `NEXTAUTH_URL` | optional | Useful in some local/prod setups |
+
+Note: the UI can load without Azure envs, but `/dashboard/new` chat generation will not work.
+
+## Useful Scripts
 
 | Command | Description |
 |---|---|
-| `pnpm dev` | Dev server |
+| `pnpm dev` | Run dev server |
 | `pnpm build` | Production build |
-| `pnpm test` | Unit tests (Vitest) |
-| `pnpm test:e2e` | E2E tests (Playwright) |
-| `pnpm prisma studio` | DB browser |
+| `pnpm lint` | ESLint |
+| `pnpm test:run` | Run all unit tests |
+| `pnpm test:e2e` | Playwright E2E |
+| `pnpm prisma studio` | Prisma Studio |
 
-## Project Structure
+## Project Structure (High Level)
 
-```
-app/                  # Next.js App Router
-  api/auth/           # NextAuth API routes
-  dashboard/          # Protected dashboard
-  page.tsx            # Landing page
+```text
+app/
+  api/
+    chat/
+    tasks/
+  dashboard/
+    page.tsx              # monitor board
+    new/page.tsx          # chat builder
+    monitors/[id]/page.tsx
 components/
-  landing/            # Landing page components
-  ui/                 # shadcn/ui components
+  chat/
+  dashboard/
+  monitoring/
+  landing/
+  ui/
 lib/
-  auth.ts             # NextAuth config
-  prisma.ts           # Prisma client
+  feeds/
+  hooks/
+  tools + prompt + parsing
 prisma/
-  schema.prisma       # DB schema
-__tests__/            # Unit tests
-e2e/                  # E2E tests
+  schema.prisma
+  migrations/
 ```

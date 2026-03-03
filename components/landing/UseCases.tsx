@@ -37,7 +37,7 @@ export function UseCases() {
         <div className="mt-12 grid gap-6 sm:grid-cols-3">
           {cases.map((c, i) => (
             <ScrollReveal key={c.title} delay={i * 120}>
-              <div className="group flex h-full flex-col rounded-xl border border-landing-border bg-landing-surface/50 p-6 transition-all duration-300 hover:-translate-y-0.5 hover:border-landing-accent/40 hover:shadow-[0_0_24px_rgba(59,130,246,0.08)]">
+              <div className="group flex h-full flex-col rounded-xl border border-landing-border bg-landing-surface/50 p-6 transition-all duration-300 hover:-translate-y-0.5 hover:border-landing-accent/40 hover:shadow-[0_0_28px_rgba(245,158,11,0.14)]">
                 <span className="text-2xl">{c.icon}</span>
                 <h3 className="mt-4 font-[family-name:var(--font-heading)] text-xl font-semibold tracking-[-0.02em] text-landing-text">
                   {c.title}

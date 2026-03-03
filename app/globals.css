@@ -12,14 +12,14 @@
   --font-heading: var(--font-heading);
   --font-body: var(--font-body);
   --font-code: var(--font-code);
-  --color-landing-bg: #09090B;
-  --color-landing-surface: #18181B;
-  --color-landing-border: #27272A;
-  --color-landing-text: #FAFAFA;
-  --color-landing-muted: #A1A1AA;
-  --color-landing-accent: #3B82F6;
-  --color-landing-accent-hover: #60A5FA;
-  --color-landing-success: #22C55E;
+  --color-landing-bg: #080705;
+  --color-landing-surface: #14110d;
+  --color-landing-border: #2f271d;
+  --color-landing-text: #fcfbf7;
+  --color-landing-muted: #b9b2a6;
+  --color-landing-accent: #d97706;
+  --color-landing-accent-hover: #f59e0b;
+  --color-landing-success: #f59e0b;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -209,6 +209,6 @@
 
 /* Dot grid background */
 .dot-grid {
-  background-image: radial-gradient(circle, #27272A 1px, transparent 1px);
+  background-image: radial-gradient(circle, #2f271d 1px, transparent 1px);
   background-size: 24px 24px;
 }
