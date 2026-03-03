@@ -75,21 +75,6 @@ function parseFinalizeSummary(part: { input?: unknown; output?: unknown }): stri
   return typeof candidate?.summary === "string" && candidate.summary ? candidate.summary : null;
 }
 
-function getActivePresentOptionsPartIndex(parts: UIMessage["parts"] | undefined): number | null {
-  if (!parts?.length) return null;
-
-  let activeIndex: number | null = null;
-
-  parts.forEach((part, index) => {
-    if (!isToolUIPart(part) || getToolName(part) !== "present_options") return;
-    if (parsePresentOptionsPayload(part) || isPresentOptionsPending(part)) {
-      activeIndex = index;
-    }
-  });
-
-  return activeIndex;
-}
-
 export function MessageBubble({
   message,
   append,
@@ -101,7 +86,6 @@ export function MessageBubble({
   const [chipsDisabled, setChipsDisabled] = useState(false);
   const [dismissed, setDismissed] = useState(false);
   const queryClient = useQueryClient();
-  const activePresentOptionsPartIndex = getActivePresentOptionsPartIndex(message.parts);
 
   const saveMutation = useMutation({
     mutationFn: async (payload?: { summary?: string }) => {
@@ -130,12 +114,12 @@ export function MessageBubble({
   });
 
   // Skip rendering if message only has hidden tool invocations
-  const hasVisibleContent = message.parts.some((p, i) => {
+  const hasVisibleContent = message.parts.some((p) => {
     if (p.type === "text") return true;
     if (isToolUIPart(p)) {
       const name = getToolName(p);
       if (name === "present_options") {
-        return i === activePresentOptionsPartIndex;
+        return !!parsePresentOptionsPayload(p) || isPresentOptionsPending(p);
       }
       if (name === "finalize_task") {
         return !!parseFinalizeSummary(p) && !dismissed;
@@ -175,7 +159,6 @@ export function MessageBubble({
           if (isToolUIPart(part)) {
             const name = getToolName(part);
             if (name === "present_options") {
-              if (i !== activePresentOptionsPartIndex) return null;
               const payload = parsePresentOptionsPayload(part);
               if (!payload) {
                 if (isPresentOptionsPending(part)) {

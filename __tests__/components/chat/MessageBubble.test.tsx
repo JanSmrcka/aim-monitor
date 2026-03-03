@@ -86,48 +86,6 @@ describe("MessageBubble", () => {
     expect(screen.getByRole("button", { name: "News" })).toBeInTheDocument();
   });
 
-  it("renders only latest present_options block when multiple are present", () => {
-    const message = {
-      id: "msg-tool-multi",
-      role: "assistant",
-      parts: [
-        {
-          type: "tool-present_options",
-          toolCallId: "call-old",
-          state: "output-available",
-          input: {
-            question: "First question",
-            options: [{ label: "Old option", value: "old" }],
-          },
-          output: {
-            question: "First question",
-            options: [{ label: "Old option", value: "old" }],
-          },
-        },
-        {
-          type: "tool-present_options",
-          toolCallId: "call-new",
-          state: "output-available",
-          input: {
-            question: "Second question",
-            options: [{ label: "New option", value: "new" }],
-          },
-          output: {
-            question: "Second question",
-            options: [{ label: "New option", value: "new" }],
-          },
-        },
-      ],
-    } as unknown as UIMessage;
-
-    renderWithQuery(<MessageBubble message={message} append={noop} isLatest />);
-
-    expect(screen.getByText("Second question")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "New option" })).toBeInTheDocument();
-    expect(screen.queryByText("First question")).not.toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: "Old option" })).not.toBeInTheDocument();
-  });
-
   it("locks option chips while interaction is locked", () => {
     const message = {
       id: "msg-tool-locked",

@@ -42,7 +42,7 @@ export function MonitoringPreview({ task }: { task: MonitoringTask }) {
   }
 
   return (
-    <div className="flex h-full w-full min-h-0 flex-col">
+    <div className="flex h-full min-h-0 flex-col">
       <div className="border-b border-zinc-800/80 px-3 py-2">
         <p className="text-[10px] uppercase tracking-[0.22em] text-zinc-500">Monitor spec</p>
         <div className="mt-1 flex items-center gap-2">
