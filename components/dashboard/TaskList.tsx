@@ -51,36 +51,39 @@ export function TaskList({ tasks, isLoading, onSelectTask, selectedTaskId }: Tas
             <button
               key={task.id}
               onClick={() => onSelectTask(task.id)}
-              className={`group w-full overflow-hidden rounded-xl border px-3 py-2.5 text-left transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-300/50 ${
+              className={`group min-w-0 w-full rounded-xl border px-3 py-2.5 text-left transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-300/50 ${
                 isActive
                   ? "border-amber-300/55 bg-zinc-900 shadow-[0_0_0_1px_rgba(251,191,36,0.2)_inset]"
                   : "border-zinc-800/80 bg-zinc-900/70 hover:border-amber-300/35 hover:bg-zinc-900"
               }`}
             >
-              <div className="flex items-start justify-between gap-3">
-                <div className="min-w-0 flex-1">
-                  <p
-                    title={task.title}
-                    className={`max-w-full whitespace-normal break-words text-sm font-medium leading-snug transition ${
-                      isActive ? "text-amber-100" : "text-zinc-100 group-hover:text-amber-100"
-                    }`}
-                  >
-                    {task.title}
+              <div className="min-w-0 space-y-2">
+                <p
+                  title={task.title}
+                  className={`max-w-full whitespace-normal break-words text-sm font-medium leading-relaxed [overflow-wrap:anywhere] transition ${
+                    isActive ? "text-amber-100" : "text-zinc-100 group-hover:text-amber-100"
+                  }`}
+                >
+                  {task.title}
+                </p>
+
+                {scope ? (
+                  <p className="min-w-0 whitespace-normal break-words text-xs leading-relaxed text-zinc-500 [overflow-wrap:anywhere]">
+                    {scope}
                   </p>
-                  {scope ? (
-                    <p className="mt-0.5 truncate text-xs text-zinc-500">{scope}</p>
-                  ) : (
-                    <p className="mt-0.5 text-xs text-zinc-600">No scope defined yet</p>
-                  )}
-                </div>
+                ) : (
+                  <p className="text-xs text-zinc-600">No scope defined yet</p>
+                )}
 
                 {frequency && (
-                  <Badge
-                    variant="secondary"
-                    className="ml-2 shrink-0 border border-amber-300/20 bg-amber-300/10 text-[10px] uppercase tracking-[0.14em] text-amber-200"
-                  >
-                    {frequency}
-                  </Badge>
+                  <div>
+                    <Badge
+                      variant="secondary"
+                      className="shrink-0 border border-amber-300/20 bg-amber-300/10 text-[10px] uppercase tracking-[0.14em] text-amber-200"
+                    >
+                      {frequency}
+                    </Badge>
+                  </div>
                 )}
               </div>
             </button>

@@ -92,4 +92,19 @@ describe("OptionChips", () => {
     );
     expect(screen.getByText(/wait for response to finish/i)).toBeInTheDocument();
   });
+
+  it("maps icon name tokens to actual icons", () => {
+    render(
+      <OptionChips
+        question="Pick"
+        options={[{ label: "Price", value: "price", icon: "chart-line" }]}
+        onSelect={vi.fn()}
+        disabled={false}
+      />
+    );
+
+    const button = screen.getByRole("button", { name: "Price" });
+    expect(screen.queryByText("chart-line")).not.toBeInTheDocument();
+    expect(button.querySelector("svg")).not.toBeNull();
+  });
 });

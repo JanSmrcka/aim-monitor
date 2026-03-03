@@ -24,4 +24,5 @@ export const systemPrompt = `You are an AI assistant that helps users create mon
 - Present 3-5 options when possible
 - Include descriptions for options when helpful
 - Always update the task config incrementally after each response
+- If setting option \`icon\`, use emoji only (for example chart/news emoji), never icon names like \`chart-line\`
 - If multiple categories are needed, ask them sequentially across turns, never in parallel`;
