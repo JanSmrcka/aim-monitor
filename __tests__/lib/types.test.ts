@@ -13,7 +13,7 @@ describe("MonitoringTask type", () => {
   });
 
   it("all fields are optional", () => {
-    expectTypeOf<{}>().toMatchTypeOf<MonitoringTask>();
+    expectTypeOf({}).toMatchTypeOf<MonitoringTask>();
   });
 
   it("MonitoringSource has type and name", () => {
@@ -28,6 +28,6 @@ describe("MonitoringTask type", () => {
   });
 
   it("MonitoringFilters has optional fields", () => {
-    expectTypeOf<{}>().toMatchTypeOf<MonitoringFilters>();
+    expectTypeOf({}).toMatchTypeOf<MonitoringFilters>();
   });
 });

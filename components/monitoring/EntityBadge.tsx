@@ -4,11 +4,11 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
 const colorMap: Record<string, string> = {
-  company: "bg-blue-500/20 text-blue-400 border-blue-500/30",
-  person: "bg-purple-500/20 text-purple-400 border-purple-500/30",
-  topic: "bg-green-500/20 text-green-400 border-green-500/30",
-  product: "bg-orange-500/20 text-orange-400 border-orange-500/30",
-  ticker: "bg-yellow-500/20 text-yellow-400 border-yellow-500/30",
+  company: "border-sky-300/30 bg-sky-300/10 text-sky-100",
+  person: "border-teal-300/30 bg-teal-300/10 text-teal-100",
+  topic: "border-emerald-300/30 bg-emerald-300/10 text-emerald-100",
+  product: "border-amber-300/30 bg-amber-300/10 text-amber-100",
+  ticker: "border-orange-300/30 bg-orange-300/10 text-orange-100",
 };
 
 interface EntityBadgeProps {
@@ -21,9 +21,9 @@ export function EntityBadge({ type, name }: EntityBadgeProps) {
     <Badge
       data-testid="entity-badge"
       variant="outline"
-      className={cn("gap-1", colorMap[type] ?? "")}
+      className={cn("gap-1 border text-xs", colorMap[type] ?? "")}
     >
-      <span className="text-[10px] opacity-70">{type}</span>
+      <span className="text-[9px] uppercase tracking-[0.14em] opacity-70">{type}</span>
       {name}
     </Badge>
   );

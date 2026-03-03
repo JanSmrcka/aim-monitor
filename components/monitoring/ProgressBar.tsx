@@ -23,7 +23,7 @@ export function ProgressBar({ task }: { task: MonitoringTask }) {
 
   return (
     <div data-testid="progress-bar" className="space-y-2">
-      <div className="flex justify-between text-xs text-muted-foreground">
+      <div className="flex justify-between text-[10px] uppercase tracking-[0.16em] text-zinc-500">
         <span>Progress</span>
         <span>{completed}/{segments.length}</span>
       </div>
@@ -32,8 +32,8 @@ export function ProgressBar({ task }: { task: MonitoringTask }) {
           <div
             key={s.key}
             className={cn(
-              "h-1.5 flex-1 rounded-full",
-              isFieldDefined(task, s.key) ? "bg-primary" : "bg-muted"
+              "h-1.5 flex-1 rounded-full transition-colors",
+              isFieldDefined(task, s.key) ? "bg-amber-300" : "bg-zinc-800"
             )}
             title={s.label}
           />

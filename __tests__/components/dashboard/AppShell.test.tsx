@@ -38,6 +38,6 @@ describe("AppShell", () => {
         <div>content</div>
       </AppShell>
     );
-    expect(screen.getByText("Dashboard")).toBeInTheDocument();
+    expect(screen.getByText("Monitor Ops")).toBeInTheDocument();
   });
 });

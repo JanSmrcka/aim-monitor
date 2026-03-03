@@ -4,7 +4,7 @@ import { Sidebar } from "@/components/dashboard/Sidebar";
 import { UserMenu } from "@/components/dashboard/UserMenu";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { Menu } from "lucide-react";
+import { Menu, Sparkles } from "lucide-react";
 import { useTasks } from "@/lib/hooks/use-tasks";
 import { useChatContext } from "@/lib/chat-context";
 import { useState } from "react";
@@ -28,7 +28,8 @@ export function AppShell({ user, children }: AppShellProps) {
     resetChat();
   };
 
-  const handleSelectTask = (_id: string) => {
+  const handleSelectTask = (id: string) => {
+    void id;
     // TODO: load task
   };
 
@@ -42,32 +43,57 @@ export function AppShell({ user, children }: AppShellProps) {
   );
 
   return (
-    <div className="flex h-screen bg-background">
-      {/* Desktop sidebar */}
-      <div className="hidden md:block">{sidebarContent}</div>
+    <div className="relative h-dvh overflow-hidden bg-[#06070A] text-zinc-100">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(217,119,6,0.16),transparent_36%),radial-gradient(circle_at_bottom_right,rgba(251,191,36,0.08),transparent_38%)]" />
 
-      {/* Mobile sidebar */}
-      <Sheet open={sidebarOpen} onOpenChange={setSidebarOpen}>
-        <SheetTrigger asChild className="md:hidden">
-          <Button variant="ghost" size="icon" className="absolute left-2 top-2 z-50">
-            <Menu className="h-5 w-5" />
-          </Button>
-        </SheetTrigger>
-        <SheetContent side="left" className="w-[280px] p-0">
+      <div className="relative grid h-full grid-cols-1 md:grid-cols-[280px_minmax(0,1fr)]">
+        <aside className="hidden min-h-0 border-r border-amber-100/10 bg-zinc-950/80 backdrop-blur-xl md:block">
           {sidebarContent}
-        </SheetContent>
-      </Sheet>
+        </aside>
 
-      {/* Main area */}
-      <div className="flex flex-1 flex-col overflow-hidden">
-        <header className="flex h-14 items-center justify-between border-b px-4">
-          <div className="flex items-center gap-2">
-            <div className="md:hidden w-8" /> {/* spacer for mobile menu btn */}
-            <h1 className="text-lg font-semibold">Dashboard</h1>
-          </div>
-          <UserMenu user={user} />
-        </header>
-        <main className="flex-1 overflow-hidden">{children}</main>
+        <div className="flex min-h-0 flex-col">
+          <header className="border-b border-amber-100/10 bg-zinc-950/65 px-3 py-2 backdrop-blur-xl md:px-4">
+            <div className="flex items-center justify-between gap-2">
+              <div className="flex items-center gap-2">
+                <Sheet open={sidebarOpen} onOpenChange={setSidebarOpen}>
+                  <SheetTrigger asChild className="md:hidden">
+                    <Button
+                      variant="ghost"
+                      size="icon-sm"
+                      className="text-zinc-300 hover:bg-zinc-800/70 hover:text-zinc-100"
+                    >
+                      <Menu className="h-4 w-4" />
+                    </Button>
+                  </SheetTrigger>
+                  <SheetContent side="left" className="w-[286px] border-amber-100/10 bg-zinc-950 p-0">
+                    {sidebarContent}
+                  </SheetContent>
+                </Sheet>
+
+                <div>
+                  <p className="font-heading text-base font-semibold tracking-wide text-zinc-100">Monitor Ops</p>
+                  <p className="text-[11px] uppercase tracking-[0.22em] text-amber-300/80">
+                    Real-time workspace
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <span className="hidden items-center gap-1 rounded-full border border-amber-200/20 bg-amber-300/10 px-2.5 py-1 text-[11px] font-medium text-amber-200 lg:inline-flex">
+                  <Sparkles className="h-3.5 w-3.5" />
+                  Live
+                </span>
+                <UserMenu user={user} />
+              </div>
+            </div>
+          </header>
+
+          <main className="min-h-0 flex-1 overflow-hidden px-2 pb-2 pt-2 md:px-3 md:pb-3 md:pt-3">
+            <div className="h-full overflow-hidden rounded-2xl border border-amber-100/10 bg-zinc-950/55 shadow-[0_0_0_1px_rgba(251,191,36,0.06)_inset] backdrop-blur">
+              {children}
+            </div>
+          </main>
+        </div>
       </div>
     </div>
   );
