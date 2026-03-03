@@ -82,7 +82,14 @@ export function MonitorBoard({ tasks }: { tasks: BoardTask[] }) {
 
             <div className="mb-3 rounded-xl border border-zinc-800/80 bg-zinc-950/40 p-2.5">
               <p className="mb-2 text-[10px] uppercase tracking-[0.18em] text-zinc-500">Latest 3 updates</p>
-              <MonitorFeedPreview taskId={task.id} />
+              <MonitorFeedPreview
+                taskId={task.id}
+                seed={{
+                  title: task.title,
+                  scope: task.scope,
+                  frequency: task.frequency,
+                }}
+              />
             </div>
 
             <Button asChild variant="ghost" className="w-full justify-between rounded-xl text-zinc-200 hover:bg-zinc-800/70 hover:text-zinc-100">

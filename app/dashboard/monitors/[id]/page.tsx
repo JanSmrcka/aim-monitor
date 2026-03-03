@@ -54,7 +54,15 @@ export default async function MonitorDetailPage({ params }: { params: Promise<{ 
         </div>
 
         <div className="min-h-0 flex-1 overflow-auto">
-          <MonitorFeedPanel taskId={task.id} />
+          <MonitorFeedPanel
+            taskId={task.id}
+            seed={{
+              title: spec.title,
+              scope: spec.scope,
+              frequency: spec.frequency,
+              keywords: spec.keywords,
+            }}
+          />
         </div>
       </section>
 

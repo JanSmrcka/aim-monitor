@@ -20,8 +20,18 @@ function sectionForDate(isoDate: string): "Now" | "Today" | "Earlier" {
   return "Earlier";
 }
 
-export function MonitorFeedPanel({ taskId }: { taskId: string }) {
-  const { data, isLoading, isError } = useTaskFeed(taskId, { limit: 20, refetchInterval: 15000 });
+export function MonitorFeedPanel({
+  taskId,
+  seed,
+}: {
+  taskId: string;
+  seed?: { title?: string | null; scope?: string | null; frequency?: string | null; keywords?: string[] };
+}) {
+  const { data, isLoading, isError } = useTaskFeed(taskId, {
+    limit: 20,
+    refetchInterval: 15000,
+    seed,
+  });
 
   if (isLoading) {
     return (

@@ -3,8 +3,18 @@
 import { useTaskFeed } from "@/lib/hooks/use-task-feed";
 import { FeedList } from "@/components/monitoring/FeedList";
 
-export function MonitorFeedPreview({ taskId }: { taskId: string }) {
-  const { data, isLoading, isError } = useTaskFeed(taskId, { limit: 3, refetchInterval: 15000 });
+export function MonitorFeedPreview({
+  taskId,
+  seed,
+}: {
+  taskId: string;
+  seed?: { title?: string | null; scope?: string | null; frequency?: string | null };
+}) {
+  const { data, isLoading, isError } = useTaskFeed(taskId, {
+    limit: 3,
+    refetchInterval: 15000,
+    seed,
+  });
 
   if (isLoading) {
     return (

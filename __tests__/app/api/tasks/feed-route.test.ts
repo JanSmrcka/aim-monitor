@@ -37,14 +37,20 @@ describe("GET /api/tasks/[id]/feed", () => {
     expect(res.status).toBe(401);
   });
 
-  it("returns 404 for non-owned task", async () => {
+  it("returns mock feed for non-owned task via fallback seed", async () => {
     mockAuth.mockResolvedValue({ user: { id: "u1" } });
     mockFindUnique.mockResolvedValue({ id: "t1", userId: "u2" });
+    mockGetMonitorFeed.mockResolvedValue({
+      items: [{ id: "f1", title: "fallback" }],
+      nextCursor: null,
+      source: "mock",
+    });
 
-    const req = new Request("http://localhost/api/tasks/t1/feed?limit=3");
+    const req = new Request("http://localhost/api/tasks/t1/feed?limit=3&title=Fallback");
     const res = await GET(req, { params: Promise.resolve({ id: "t1" }) });
 
-    expect(res.status).toBe(404);
+    expect(res.status).toBe(200);
+    expect(mockGetMonitorFeed).toHaveBeenCalled();
   });
 
   it("returns mocked feed payload", async () => {
