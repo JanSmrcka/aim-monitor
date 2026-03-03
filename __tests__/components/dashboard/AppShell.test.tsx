@@ -48,7 +48,7 @@ describe("AppShell", () => {
     expect(screen.getByText("Monitor Ops")).toBeInTheDocument();
   });
 
-  it("routes to dashboard on New Monitor", async () => {
+  it("routes to new monitor page on New Monitor", async () => {
     renderWithQuery(
       <AppShell user={mockUser}>
         <div>content</div>
@@ -56,6 +56,6 @@ describe("AppShell", () => {
     );
 
     await userEvent.click(screen.getByRole("button", { name: /new monitor/i }));
-    expect(mockPush).toHaveBeenCalledWith("/dashboard");
+    expect(mockPush).toHaveBeenCalledWith("/dashboard/new");
   });
 });

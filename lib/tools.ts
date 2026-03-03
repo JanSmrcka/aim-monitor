@@ -56,7 +56,7 @@ export const finalizeTaskSchema = z.object({
 export const tools = {
   present_options: tool({
     description: "Present options to the user as clickable chips",
-    parameters: jsonSchema({
+    inputSchema: jsonSchema({
       type: "object",
       properties: {
         question: { type: "string", description: "The question to ask the user" },
@@ -85,7 +85,7 @@ export const tools = {
   }),
   update_monitoring_task: tool({
     description: "Update the monitoring task configuration based on user responses",
-    parameters: jsonSchema({
+    inputSchema: jsonSchema({
       type: "object",
       properties: {
         title: { type: "string" },
@@ -134,7 +134,7 @@ export const tools = {
   }),
   finalize_task: tool({
     description: "Finalize the monitoring task when all required fields are defined",
-    parameters: jsonSchema({
+    inputSchema: jsonSchema({
       type: "object",
       properties: {
         summary: { type: "string", description: "Summary of the finalized monitoring task" },

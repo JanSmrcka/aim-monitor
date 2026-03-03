@@ -33,7 +33,7 @@ export function AppShell({ user, children }: AppShellProps) {
   const handleNewChat = () => {
     resetChat();
     setSidebarOpen(false);
-    router.push("/dashboard");
+    router.push("/dashboard/new");
   };
 
   const handleSelectTask = (id: string) => {
