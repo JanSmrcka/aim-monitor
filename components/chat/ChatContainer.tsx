@@ -43,7 +43,7 @@ export function ChatContainer() {
   const preview = <MonitoringPreview task={task} />;
 
   return (
-    <div className="grid h-full min-h-0 grid-cols-1 gap-2 xl:grid-cols-[minmax(0,1fr)_344px]">
+    <div className="grid h-full min-h-0 grid-cols-1 gap-2 xl:grid-cols-[minmax(0,58%)_minmax(360px,42%)] 2xl:grid-cols-[minmax(0,56%)_minmax(420px,44%)]">
       <section className="flex min-h-0 flex-col overflow-hidden rounded-xl border border-zinc-800/80 bg-zinc-950/65 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
         <div className="flex items-center justify-between border-b border-zinc-800/80 px-3 py-2">
           <div className="flex items-center gap-2">
