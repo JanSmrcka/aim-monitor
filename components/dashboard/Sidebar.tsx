@@ -18,6 +18,7 @@ interface SidebarProps {
   tasks: TaskItem[];
   isLoading: boolean;
   onNewChat: () => void;
+  onGoDashboard: () => void;
   onSelectTask: (id: string) => void;
   selectedTaskId?: string;
 }
@@ -26,19 +27,24 @@ export function Sidebar({
   tasks,
   isLoading,
   onNewChat,
+  onGoDashboard,
   onSelectTask,
   selectedTaskId,
 }: SidebarProps) {
   return (
     <div className="flex h-full w-[280px] min-h-0 flex-col">
       <div className="space-y-3 border-b border-amber-100/10 px-3 py-3">
-        <div className="flex items-center justify-between rounded-xl border border-amber-100/15 bg-zinc-900/70 px-3 py-2">
+        <button
+          type="button"
+          onClick={onGoDashboard}
+          className="flex w-full items-center justify-between rounded-xl border border-amber-100/15 bg-zinc-900/70 px-3 py-2 text-left transition hover:border-amber-300/45 hover:bg-zinc-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-300/40"
+        >
           <div>
             <p className="text-[10px] uppercase tracking-[0.2em] text-zinc-400">Workspace</p>
             <p className="font-heading text-sm font-semibold text-zinc-100">Active Monitors</p>
           </div>
           <Radar className="h-4 w-4 text-amber-300" />
-        </div>
+        </button>
 
         <Button
           onClick={onNewChat}

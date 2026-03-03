@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Menu, Sparkles } from "lucide-react";
 import { useTasks } from "@/lib/hooks/use-tasks";
 import { useChatContext } from "@/lib/chat-context";
-import { useState } from "react";
+import { useState, useSyncExternalStore } from "react";
 import { usePathname, useRouter } from "next/navigation";
 
 interface AppShellProps {
@@ -24,6 +24,11 @@ export function AppShell({ user, children }: AppShellProps) {
   const { data: tasks = [], isLoading } = useTasks();
   const { resetChat } = useChatContext();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const isClient = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false
+  );
   const router = useRouter();
   const pathname = usePathname();
 
@@ -36,6 +41,11 @@ export function AppShell({ user, children }: AppShellProps) {
     router.push("/dashboard/new");
   };
 
+  const handleGoDashboard = () => {
+    setSidebarOpen(false);
+    router.push("/dashboard");
+  };
+
   const handleSelectTask = (id: string) => {
     setSidebarOpen(false);
     router.push(`/dashboard/monitors/${id}`);
@@ -46,6 +56,7 @@ export function AppShell({ user, children }: AppShellProps) {
       tasks={tasks}
       isLoading={isLoading}
       onNewChat={handleNewChat}
+      onGoDashboard={handleGoDashboard}
       onSelectTask={handleSelectTask}
       selectedTaskId={selectedTaskId}
     />
@@ -64,20 +75,31 @@ export function AppShell({ user, children }: AppShellProps) {
           <header className="border-b border-amber-100/10 bg-zinc-950/65 px-3 py-2 backdrop-blur-xl md:px-4">
             <div className="flex items-center justify-between gap-2">
               <div className="flex items-center gap-2">
-                <Sheet open={sidebarOpen} onOpenChange={setSidebarOpen}>
-                  <SheetTrigger asChild className="md:hidden">
-                    <Button
-                      variant="ghost"
-                      size="icon-sm"
-                      className="text-zinc-300 hover:bg-zinc-800/70 hover:text-zinc-100"
-                    >
-                      <Menu className="h-4 w-4" />
-                    </Button>
-                  </SheetTrigger>
-                  <SheetContent side="left" className="w-[286px] border-amber-100/10 bg-zinc-950 p-0">
-                    {sidebarContent}
-                  </SheetContent>
-                </Sheet>
+                {isClient ? (
+                  <Sheet open={sidebarOpen} onOpenChange={setSidebarOpen}>
+                    <SheetTrigger asChild className="md:hidden">
+                      <Button
+                        variant="ghost"
+                        size="icon-sm"
+                        className="text-zinc-300 hover:bg-zinc-800/70 hover:text-zinc-100"
+                      >
+                        <Menu className="h-4 w-4" />
+                      </Button>
+                    </SheetTrigger>
+                    <SheetContent side="left" className="w-[286px] border-amber-100/10 bg-zinc-950 p-0">
+                      {sidebarContent}
+                    </SheetContent>
+                  </Sheet>
+                ) : (
+                  <Button
+                    variant="ghost"
+                    size="icon-sm"
+                    className="md:hidden text-zinc-300 hover:bg-zinc-800/70 hover:text-zinc-100"
+                    aria-label="Open sidebar"
+                  >
+                    <Menu className="h-4 w-4" />
+                  </Button>
+                )}
 
                 <div>
                   <p className="font-heading text-base font-semibold tracking-wide text-zinc-100">Monitor Ops</p>
@@ -92,7 +114,11 @@ export function AppShell({ user, children }: AppShellProps) {
                   <Sparkles className="h-3.5 w-3.5" />
                   Live
                 </span>
-                <UserMenu user={user} />
+                {isClient ? (
+                  <UserMenu user={user} />
+                ) : (
+                  <div className="h-9 w-9 rounded-full border border-zinc-700 bg-zinc-900/80" />
+                )}
               </div>
             </div>
           </header>

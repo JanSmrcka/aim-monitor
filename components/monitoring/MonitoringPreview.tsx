@@ -32,8 +32,8 @@ function isEmpty(task: MonitoringTask): boolean {
 export function MonitoringPreview({ task }: { task: MonitoringTask }) {
   if (isEmpty(task)) {
     return (
-      <div className="flex h-full min-h-0 items-center justify-center p-3">
-        <div className="w-full rounded-xl border border-dashed border-zinc-700 bg-zinc-900/45 px-4 py-6 text-center">
+      <div className="flex h-full w-full min-h-0 items-center justify-center p-3">
+        <div className="w-full max-w-md rounded-xl border border-dashed border-zinc-700 bg-zinc-900/45 px-4 py-6 text-center">
           <p className="text-sm text-zinc-300">Your monitoring task will appear here</p>
           <p className="mt-1 text-xs text-zinc-500">Answer prompts in chat to build a live monitor spec.</p>
         </div>
